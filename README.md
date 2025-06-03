@@ -21,7 +21,7 @@ Para executar o projeto, você pode usar a IDE de sua preferência. No entanto, 
    - Versão do Java compatível (geralmente Java 8 ou superior)  
    - Outras bibliotecas que o projeto possa usar (se houver)
 
-5. Após configurar, você poderá compilar e executar o projeto diretamente pela IDE.
+5. Após configurar, você poderá compilar e executar os testes JUnit diretamente pela IDE.
 
 ---
 
