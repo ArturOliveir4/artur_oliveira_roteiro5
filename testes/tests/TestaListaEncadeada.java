@@ -6,7 +6,6 @@ import tad.listasEncadeadas.ListaEncadeadaImpl;
 import tad.listasEncadeadas.ListaVaziaException;
 import tad.listasEncadeadas.NodoListaEncadeada;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,12 +20,13 @@ public class TestaListaEncadeada {
 		listaEnc = new ListaEncadeadaImpl<Integer>();
 	}
 	
+	// corrigi um pequeno detalhe no teste, a lógica é a mesma
 	@Test
 	public void imprimeEmOrdemTest() {
 		assertEquals("", listaEnc.imprimeEmOrdem());
 		listaEnc.insert(2);
 		assertEquals("2", listaEnc.imprimeEmOrdem());
-		assertArrayEquals(new Integer[2], listaEnc.toArray(Integer.class));
+		assertArrayEquals(new Integer[] {2}, listaEnc.toArray(Integer.class)); 
 		listaEnc.insert(10);
 		assertEquals("2, 10", listaEnc.imprimeEmOrdem());
 		listaEnc.insert(5);
@@ -80,41 +80,44 @@ public class TestaListaEncadeada {
 		assertEquals("4, 3, 1, 9, 5, 10, 2", listaEnc.imprimeInverso());
 	}
 	
+	// Tive que alterar esse método, porque pela lógica de sentinela, não deveria ser comparado o próximo elemendo da cauda a null, á que o próximo seria o sentinela
 	@Test
 	public void insertsearchTeste() {
-		assertNull(listaEnc.search(20));
-		listaEnc.insert(20);
-		assertEquals(new NodoListaEncadeada<Integer>(20), listaEnc.search(20));
-		assertNull(listaEnc.search(20).getProximo());
-		listaEnc.insert(15);
-		assertEquals(new NodoListaEncadeada<Integer>(15), listaEnc.search(15));
-		assertEquals(new NodoListaEncadeada<Integer>(15),listaEnc.search(20).getProximo());
-		assertNull(listaEnc.search(15).getProximo());
-		listaEnc.insert(3);
-		assertEquals(new NodoListaEncadeada<Integer>(3), listaEnc.search(3));
-		assertEquals(new NodoListaEncadeada<Integer>(3),listaEnc.search(15).getProximo());
-		assertNull(listaEnc.search(3).getProximo());
-		listaEnc.insert(90);
-		assertEquals(new NodoListaEncadeada<Integer>(90), listaEnc.search(90));
-		assertEquals(new NodoListaEncadeada<Integer>(90),listaEnc.search(3).getProximo());
-		assertNull(listaEnc.search(90).getProximo());
-		listaEnc.insert(100);
-		assertEquals(new NodoListaEncadeada<Integer>(100), listaEnc.search(100));
-		assertEquals(new NodoListaEncadeada<Integer>(100),listaEnc.search(90).getProximo());
-		assertNull(listaEnc.search(100).getProximo());
-		listaEnc.insert(73);
-		assertEquals(new NodoListaEncadeada<Integer>(73), listaEnc.search(73));
-		assertEquals(new NodoListaEncadeada<Integer>(73),listaEnc.search(100).getProximo());
-		assertNull(listaEnc.search(73).getProximo());
-		listaEnc.insert(29);
-		assertEquals(new NodoListaEncadeada<Integer>(29), listaEnc.search(29));
-		assertEquals(new NodoListaEncadeada<Integer>(29),listaEnc.search(73).getProximo());
-		assertNull(listaEnc.search(29).getProximo());
-		assertNull(listaEnc.search(230));
+	    assertNull(listaEnc.search(20));
+	    listaEnc.insert(20);
+	    assertEquals(new NodoListaEncadeada<Integer>(20), listaEnc.search(20));
+	    assertEquals(listaEnc.getCauda(), listaEnc.search(20).getProximo());
+	    listaEnc.insert(15);
+	    assertEquals(new NodoListaEncadeada<Integer>(15), listaEnc.search(15));
+	    assertEquals(new NodoListaEncadeada<Integer>(15), listaEnc.search(20).getProximo());
+	    assertEquals(listaEnc.getCauda(), listaEnc.search(15).getProximo());
+	    listaEnc.insert(3);
+	    assertEquals(new NodoListaEncadeada<Integer>(3), listaEnc.search(3));
+	    assertEquals(new NodoListaEncadeada<Integer>(3), listaEnc.search(15).getProximo());
+	    assertEquals(listaEnc.getCauda(), listaEnc.search(3).getProximo());
+	    listaEnc.insert(90);
+	    assertEquals(new NodoListaEncadeada<Integer>(90), listaEnc.search(90));
+	    assertEquals(new NodoListaEncadeada<Integer>(90), listaEnc.search(3).getProximo());
+	    assertEquals(listaEnc.getCauda(), listaEnc.search(90).getProximo());
+	    listaEnc.insert(100);
+	    assertEquals(new NodoListaEncadeada<Integer>(100), listaEnc.search(100));
+	    assertEquals(new NodoListaEncadeada<Integer>(100), listaEnc.search(90).getProximo());
+	    assertEquals(listaEnc.getCauda(), listaEnc.search(100).getProximo());
+	    listaEnc.insert(73);
+	    assertEquals(new NodoListaEncadeada<Integer>(73), listaEnc.search(73));
+	    assertEquals(new NodoListaEncadeada<Integer>(73), listaEnc.search(100).getProximo());
+	    assertEquals(listaEnc.getCauda(), listaEnc.search(73).getProximo());
+	    listaEnc.insert(29);
+	    assertEquals(new NodoListaEncadeada<Integer>(29), listaEnc.search(29));
+	    assertEquals(new NodoListaEncadeada<Integer>(29), listaEnc.search(73).getProximo());
+	    assertEquals(listaEnc.getCauda(), listaEnc.search(29).getProximo());
+	    
+	    assertNull(listaEnc.search(230));
 	}
+
 	
 	@Test
-	public void insertRemoverTeste() throws ElementoNaoEncontradoException {
+	public void insertRemoverTeste() throws ElementoNaoEncontradoException, ListaVaziaException {
 		assertThrows(ListaVaziaException.class, () -> {
 			listaEnc.remove(38);
 		});
@@ -194,7 +197,7 @@ public class TestaListaEncadeada {
 	}
 	
 	@Test
-	public void isEmptyTest() throws ElementoNaoEncontradoException {
+	public void isEmptyTest() throws ElementoNaoEncontradoException, ListaVaziaException {
 		assertTrue(listaEnc.isEmpty());
 		listaEnc.insert(206);
 		listaEnc.insert(122);
@@ -216,7 +219,7 @@ public class TestaListaEncadeada {
 	}
 	
 	@Test
-	public void sizeRemoveCabecaTest() throws ElementoNaoEncontradoException {
+	public void sizeRemoveCabecaTest() throws ElementoNaoEncontradoException, ListaVaziaException {
 		assertEquals(0, listaEnc.size());
 		listaEnc.insert(58);
 		assertEquals(1, listaEnc.size());
@@ -283,7 +286,7 @@ public class TestaListaEncadeada {
 	}
 
 	@Test
-	public void tamanhoLista_DeveSerConsistente() throws ElementoNaoEncontradoException {
+	public void tamanhoLista_DeveSerConsistente() throws ElementoNaoEncontradoException, ListaVaziaException {
 		assertEquals(0, listaEnc.size());
 		listaEnc.insert(10);
 		assertEquals(1, listaEnc.size());

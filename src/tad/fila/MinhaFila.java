@@ -1,65 +1,142 @@
 package tad.fila;
 
 /**
- * Fila deve ser implementada com array fixo e estratégia circular
- * de gerenciamento de apontadores de cauda e cabeça.
- * @author fabioleite
- *
+ * Implementação de uma fila usando array fixo e estratégia circular
+ * para gerenciar os apontadores de cabeça e cauda.
+ * 
+ * @author Artur Oliveira Praxedes
  */
 public class MinhaFila implements FilaIF<Integer> {
 	
-	private int tamanho = 10;
+	/** Tamanho máximo da fila (capacidade do array) */
+	private int tamanho = 5;
 	
-	private int cauda = 1;
+	/** Índice para inserção na cauda da fila */
+	private int cauda = 0;
+	
+	/** Índice para remoção na cabeça da fila */
 	private int cabeca = 0;
 	
+	/** Quantidade atual de elementos na fila */
+	private int quantidade = 0;
+	
+	/** Array que armazena os elementos da fila */
 	private Integer[] meusDados = null;
 
-	public MinhaFila(int tamanhoInicial) {
+	/**
+	 * Construtor que inicializa a fila com capacidade especificada.
+	 * 
+	 * @param tamanhoInicial capacidade inicial da fila
+	 */
+	public MinhaFila(int tamanhoInicial){
 		tamanho = tamanhoInicial;
+		this.meusDados = new Integer[tamanho];
 	}
 	
-	public MinhaFila() {
+	/**
+	 * Construtor padrão que inicializa a fila com capacidade padrão (5).
+	 */
+	public MinhaFila(){
+		meusDados = new Integer[tamanho];
 	}
 
+	/**
+	 * Enfileira um novo elemento na cauda da fila.
+	 * 
+	 * @param item elemento a ser inserido
+	 * @throws FilaCheiaException se a fila estiver cheia
+	 */
 	@Override
-	public void enfileirar(Integer item) {
-		throw new UnsupportedOperationException("Implementar");
-		
+	public void enfileirar(Integer item) throws FilaCheiaException {
+		if (isFull()) {
+			throw new FilaCheiaException();
+		}
+		meusDados[cauda] = item;
+		cauda = (cauda + 1) % tamanho;
+		quantidade++;
 	}
 
+	/**
+	 * Desenfileira e retorna o elemento na cabeça da fila.
+	 * 
+	 * @return elemento removido da cabeça da fila
+	 * @throws FilaVaziaException se a fila estiver vazia
+	 */
 	@Override
-	public Integer desenfileirar() {
-		throw new UnsupportedOperationException("Implementar");
+	public Integer desenfileirar() throws FilaVaziaException {
+		if (isEmpty()) {
+			throw new FilaVaziaException();
+		}
+		quantidade--;
+		Integer item = meusDados[cabeca];
+		cabeca = (cabeca + 1) % tamanho;
+		return item;	
 	}
 
+	/**
+	 * Retorna o elemento na cauda da fila sem removê-lo.
+	 * 
+	 * @return elemento na cauda, ou null se a fila estiver vazia
+	 */
 	@Override
 	public Integer verificarCauda() {
-		throw new UnsupportedOperationException("Implementar");
+		if(isEmpty()){ 
+			return null;
+		}
+		int indiceCaudaAnterior = (cauda - 1 + tamanho) % tamanho;
+		return meusDados[indiceCaudaAnterior];	
 	}
 
+	/**
+	 * Retorna o elemento na cabeça da fila sem removê-lo.
+	 * 
+	 * @return elemento na cabeça, ou null se a fila estiver vazia
+	 */
 	@Override
 	public Integer verificarCabeca() {
-		throw new UnsupportedOperationException("Implementar");
+		if(isEmpty()){
+			return null;
+		}
+		return meusDados[cabeca];	
 	}
 
+	/**
+	 * Verifica se a fila está vazia.
+	 * 
+	 * @return true se vazia, false caso contrário
+	 */
 	@Override
 	public boolean isEmpty() {
-		throw new UnsupportedOperationException("Implementar");
+		return quantidade == 0;	
 	}
 
+	/**
+	 * Verifica se a fila está cheia.
+	 * 
+	 * @return true se cheia, false caso contrário
+	 */
 	@Override
 	public boolean isFull() {
-		throw new UnsupportedOperationException("Implementar");
+		return quantidade == tamanho;	
 	}
 	
+	/**
+	 * Retorna a capacidade máxima da fila.
+	 * 
+	 * @return capacidade da fila
+	 */
+	@Override
 	public int capacidade() {
-		return 1;
+	    return tamanho;
 	}
 
+	/**
+	 * Retorna o número atual de elementos na fila.
+	 * 
+	 * @return quantidade de elementos na fila
+	 */
+	@Override
 	public int tamanho() {
-		return 1;
-
+	    return quantidade;
 	}
-
 }

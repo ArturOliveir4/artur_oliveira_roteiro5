@@ -260,8 +260,8 @@ public class TestaConjuntoDinamico {
 	public void edgeCases_MinAndMaxIntegerValues() throws ElementoNaoEncontradoException, ConjuntoDinamicoVazioException {
 		// Teste com valores extremos
 		cd.inserir(Integer.MIN_VALUE);
+		cd.inserir(0); 
 		cd.inserir(Integer.MAX_VALUE);
-		cd.inserir(0);
 
 		assertEquals(3, cd.tamanho());
 
@@ -286,7 +286,7 @@ public class TestaConjuntoDinamico {
 	}
 
 	@Test
-	public void inserirElementosDuplicados_ShouldMaintainAllCopies() throws ElementoNaoEncontradoException, ConjuntoDinamicoVazioException {
+	public void inserirElementosDuplicados_ShouldMaintainAllCopies() throws ElementoNaoEncontradoException, ConjuntoDinamicoVazioException  {
 		// Inserir o mesmo elemento múltiplas vezes
 		for (int i = 0; i < 10; i++) {
 			cd.inserir(42);

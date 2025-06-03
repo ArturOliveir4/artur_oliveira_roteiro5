@@ -26,7 +26,7 @@ public class TestaListaDuplamenteEncadeada {
 		assertEquals("", listaDuplaEnc.imprimeEmOrdem());
 		listaDuplaEnc.insert(2);
 		assertEquals("2", listaDuplaEnc.imprimeEmOrdem());
-		assertArrayEquals(new Integer[2], listaDuplaEnc.toArray(Integer.class));
+		assertArrayEquals(new Integer[] {2}, listaDuplaEnc.toArray(Integer.class)); // alterei apenas a criação do Integer
 		listaDuplaEnc.insert(10);
 		assertEquals("2, 10", listaDuplaEnc.imprimeEmOrdem());
 		listaDuplaEnc.insert(5);
@@ -101,7 +101,7 @@ public class TestaListaDuplamenteEncadeada {
 	}
 	
 	@Test
-	public void insertRemoverTeste() throws ElementoNaoEncontradoException {
+	public void insertRemoverTeste() throws ElementoNaoEncontradoException, ListaVaziaException {
 		assertThrows(ListaVaziaException.class, () -> {
 			listaDuplaEnc.remove(38);
 		});
@@ -185,7 +185,7 @@ public class TestaListaDuplamenteEncadeada {
 	}
 	
 	@Test
-	public void isEmptyTest() throws ElementoNaoEncontradoException {
+	public void isEmptyTest() throws ElementoNaoEncontradoException, ListaVaziaException {
 		assertTrue(listaDuplaEnc.isEmpty());
 		listaDuplaEnc.insert(206);
 		listaDuplaEnc.insert(122);
@@ -207,7 +207,7 @@ public class TestaListaDuplamenteEncadeada {
 	}
 	
 	@Test
-	public void sizeRemoveCabecaTest() throws ElementoNaoEncontradoException {
+	public void sizeRemoveCabecaTest() throws ElementoNaoEncontradoException, ListaVaziaException {
 		assertEquals(0, listaDuplaEnc.size());
 		listaDuplaEnc.insert(58);
 		assertEquals(1, listaDuplaEnc.size());
@@ -241,7 +241,7 @@ public class TestaListaDuplamenteEncadeada {
 	}
 	
 	@Test
-	public void removeUltimoTest() throws ElementoNaoEncontradoException {
+	public void removeUltimoTest() throws ElementoNaoEncontradoException, ListaVaziaException {
 		listaDuplaEnc.insert(33);
 		listaDuplaEnc.insert(15);
 		listaDuplaEnc.insert(78);
@@ -252,14 +252,15 @@ public class TestaListaDuplamenteEncadeada {
 		
 		NodoListaDuplamenteEncadeada<Integer> cauda = ((ListaDuplamenteEncadeadaImpl<Integer>)listaDuplaEnc).search(15);
 		assertEquals(new NodoListaDuplamenteEncadeada<Integer>(33), cauda.getAnterior());
-		assertNull(cauda.getProximo());
+		assertTrue(cauda.getProximo().isNull()); // alterei essa linha devido a lógica de lista por sentinelas
 		assertArrayEquals(new Integer[] {33, 15}, listaDuplaEnc.toArray(Integer.class));
 		assertEquals(new NodoListaDuplamenteEncadeada<Integer>(33),listaDuplaEnc.predecessor(15));
 		assertNull(listaDuplaEnc.sucessor(15));
 	}
 	
+	// Alterei uma linha devido a lógica de lista encadeada com sentinelas
 	@Test
-	public void removePrimeiro() throws ElementoNaoEncontradoException {
+	public void removePrimeiro() throws ElementoNaoEncontradoException, ListaVaziaException {
 		listaDuplaEnc.insert(33);
 		listaDuplaEnc.insert(15);
 		listaDuplaEnc.insert(78);
@@ -270,8 +271,7 @@ public class TestaListaDuplamenteEncadeada {
 		
 		NodoListaDuplamenteEncadeada<Integer> cauda = ((ListaDuplamenteEncadeadaImpl<Integer>)listaDuplaEnc).search(15);
 		assertEquals(new NodoListaDuplamenteEncadeada<Integer>(78), cauda.getProximo());
-		assertNull(cauda.getAnterior());
-		assertArrayEquals(new Integer[] {15, 78}, listaDuplaEnc.toArray(Integer.class));
+		assertEquals(((ListaDuplamenteEncadeadaImpl<Integer>) listaDuplaEnc).getCabeca(), cauda.getAnterior());		assertArrayEquals(new Integer[] {15, 78}, listaDuplaEnc.toArray(Integer.class));
 		assertEquals(new NodoListaDuplamenteEncadeada<Integer>(78),listaDuplaEnc.sucessor(15));
 		assertNull(listaDuplaEnc.predecessor(15));
 	}
@@ -300,7 +300,7 @@ public class TestaListaDuplamenteEncadeada {
 
 	// Testes para encadeamento duplo
 	@Test
-	public void encadeamentoDuplo_AposInsercoesERemocoes_DeveManterConsistencia() throws ElementoNaoEncontradoException {
+	public void encadeamentoDuplo_AposInsercoesERemocoes_DeveManterConsistencia() throws ElementoNaoEncontradoException, ListaVaziaException {
 		listaDuplaEnc.insert(10);
 		listaDuplaEnc.insert(20);
 		listaDuplaEnc.insert(30);
@@ -328,7 +328,7 @@ public class TestaListaDuplamenteEncadeada {
 
 	// Testes para casos especiais
 	@Test
-	public void removeUltimo_QuandoUnicoElemento_DeveEsvaziarLista() {
+	public void removeUltimo_QuandoUnicoElemento_DeveEsvaziarLista() throws ListaVaziaException {
 		listaDuplaEnc.insert(10);
 		listaDuplaEnc.removeUltimo();
 		assertTrue(listaDuplaEnc.isEmpty());
@@ -336,7 +336,7 @@ public class TestaListaDuplamenteEncadeada {
 	}
 
 	@Test
-	public void removePrimeiro_QuandoUnicoElemento_DeveEsvaziarLista() {
+	public void removePrimeiro_QuandoUnicoElemento_DeveEsvaziarLista() throws ListaVaziaException {
 		listaDuplaEnc.insert(10);
 		listaDuplaEnc.removePrimeiro();
 		assertTrue(listaDuplaEnc.isEmpty());

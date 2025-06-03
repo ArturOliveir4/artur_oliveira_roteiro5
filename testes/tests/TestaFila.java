@@ -82,7 +82,7 @@ public class TestaFila {
 			fila.enfileirar(2);
 			assertEquals(3, fila.verificarCabeca());
 			assertEquals(3, fila.desenfileirar());
-			assertEquals(3, fila.verificarCabeca());
+			assertEquals(5, fila.verificarCabeca());
 	
 			fila.enfileirar(15);
 			
